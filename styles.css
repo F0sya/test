@@ -1,59 +1,165 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--tg-theme-bg-color, #f0f2f5); /* Використовуємо кольори теми Telegram */
+    background-color: var(--tg-theme-bg-color, #f0f2f5);
     color: var(--tg-theme-text-color, #000000);
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden; /* Щоб не було скролу основної сторінки */
+    display: flex;
+    flex-direction: column;
+}
+
+.game-area {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
+    padding-bottom: 100px; /* Місце для меню знизу */
 }
 
-.container {
-    text-align: center;
-    width: 100%;
-    max-width: 400px;
-}
-
-h1 { margin-bottom: 10px; }
+h1 { margin: 0; }
 
 .score-box {
-    font-size: 3em;
-    font-weight: bold;
-    margin: 20px 0;
+    font-size: 3.5em;
+    font-weight: 800;
+    margin: 10px 0;
     color: var(--tg-theme-button-color, #3390ec);
 }
- .btn {
-     width: 100%;
-     padding: 18px;
-     margin: 10px 0;
-     border: none;
-     border-radius: 12px;
-     font-size: 1.2em;
-     font-weight: 600;
-     cursor: pointer;
-     transition: transform 0.1s, opacity 0.2s;
- }
-.btn:active { transform: scale(0.98); }
-        /* Кнопка кліку використовує оновний колір теми */
-.btn-click {
-    background-color: var(--tg-theme-button-color, #3390ec);
-    color: var(--tg-theme-button-text-color, #ffffff);
+
+.speedometer {
+    font-size: 1.1em;
+    color: var(--tg-theme-hint-color, #999);
+    margin-bottom: 30px;
+    background: rgba(0,0,0,0.05);
+    padding: 5px 15px;
+    border-radius: 20px;
 }
 
-/* Кнопка покращення іншого кольору */
-.btn-upgrade {
+/* Кругла кнопка кліку */
+.btn-circle {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--tg-theme-button-color, #3390ec) 0%, #1c68b3 100%);
+    border: 8px solid rgba(255,255,255,0.2);
+    color: white;
+    font-size: 4em;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: transform 0.1s;
+    outline: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-circle:active {
+    transform: scale(0.95);
+}
+
+/* --- ВИПАДАЮЧЕ МЕНЮ --- */
+.bottom-sheet {
+    position: fixed;
+    bottom: -70%; /* Сховано знизу (залишаємо тільки ручку) */
+    left: 0;
+    width: 100%;
+    height: 75%;
+    background-color: var(--tg-theme-secondary-bg-color, #ffffff);
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+    transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+}
+
+.bottom-sheet.open {
+    bottom: 0; /* Відкрито */
+}
+
+.menu-handle {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--tg-theme-hint-color, #888);
+    cursor: pointer;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.upgrades-container {
+    padding: 20px;
+    overflow-y: auto; /* Скрол всередині меню */
+    flex: 1;
+}
+
+/* Стилі карток товарів */
+.upgrade-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--tg-theme-bg-color, #f5f5f5);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+}
+
+.upgrade-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.upgrade-name { font-weight: bold; font-size: 1.1em; }
+.upgrade-desc { font-size: 0.85em; color: var(--tg-theme-hint-color, #888); }
+
+.upgrade-btn {
     background-color: #2ecc71;
     color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
 }
-.btn:disabled {
-    opacity: 0.5;
+
+.upgrade-btn:disabled {
+    background-color: #ccc;
     cursor: not-allowed;
 }
-.stats {
-    margin-top: 20px;
-    color: var(--tg-theme-hint-color, #999999);
+
+.floating-text {
+    position: absolute;
+    font-weight: 900;
+    font-size: 1.8em;
+    /* Використовуємо колір кнопки або білий для контрасту */
+    color: var(--tg-theme-button-color, #3390ec); 
+    /* Обводка тексту для кращої видимості на будь-якому фоні */
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8), -1px -1px 2px rgba(255, 255, 255, 0.8);
+    
+    pointer-events: none; /* Щоб текст не перехоплював кліки */
+    user-select: none; /* Щоб текст не виділявся */
+    z-index: 1000; /* Поверх усього */
+    
+    /* Анімація */
+    animation: floatUp FadeOut 0.8s ease-out forwards;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(0.5);
+    }
+    100% {
+        transform: translateY(-80px) scale(1.2); /* Піднімається на 80px і трохи збільшується */
+    }
+}
+
+/* Зникнення */
+@keyframes FadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; } /* Тримаємо видимим більшу частину часу */
+    100% { opacity: 0; }
 }

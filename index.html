@@ -9,27 +9,35 @@
 </head>
 <body>
 
-
-<div class="container">
+<div class="game-area">
     <h1>💰 Клікер</h1>
 
     <div class="score-box">
         <span id="score">0</span>
     </div>
 
-    <button id="clickBtn" class="btn btn-click" onclick="handleClick()">
-        👆 Клікнути
-    </button>
-
-    <button id="upgradeBtn" class="btn btn-upgrade" onclick="handleUpgrade()">
-        ⚡️ Покращити (Ціна: <span id="cost">10</span>)
-    </button>
-
-    <div class="stats">
-        Сила кліку: +<span id="power">1</span>
+    <div class="speedometer">
+        🚀 <span id="profit">0</span> / сек
     </div>
+
+    <button id="clickBtn" class="btn-circle" onclick="handleClick(event)">
+        👆
+    </button>
 </div>
 
+<div id="upgradeMenu" class="bottom-sheet">
+    <div class="menu-handle" onclick="toggleMenu()">
+        <span id="arrowIcon">🔼</span> Магазин
+    </div>
+
+    <div class="upgrades-container">
+        <h3>⚡️ Покращення кліку</h3>
+        <div id="clickUpgrades"></div>
+
+        <h3 style="margin-top: 20px;">🤖 Авто-фарм (Пасив)</h3>
+        <div id="autoUpgrades"></div>
+    </div>
+</div>
 
 <script src="main.js"></script>
 </body>
